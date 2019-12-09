@@ -4,20 +4,15 @@ class Scene1 extends Phaser.Scene {
     }
 
     preload(){
+        // LOADING BACKGROUND IMAGE
         this.load.image("background","assets/img/background.png");
 
-        this.load.spritesheet("ship1","assets/img/spritesheets/ship1.png",{
-            frameWidth: 16,
-            frameHeight: 16
+        /****** LOADING SPRITESHEETS ******/
+        this.load.spritesheet("enemy_ship","assets/img/new/enemy_ship.png",{
+            frameWidth: 128,
+            frameHeight: 125
         });
-        this.load.spritesheet("ship2","assets/img/spritesheets/ship2.png",{
-            frameWidth: 32,
-            frameHeight: 16
-        });
-        this.load.spritesheet("ship3","assets/img/spritesheets/ship3.png",{
-            frameWidth: 32,
-            frameHeight: 32
-        });
+
         this.load.spritesheet("explosion","assets/img/spritesheets/explosion.png",{
             frameWidth: 16,
             frameHeight: 16
@@ -27,7 +22,10 @@ class Scene1 extends Phaser.Scene {
             frameHeight: 16
         });
 
-        this.load.image("gi","assets/img/singles/spr_gi.png");
+        this.load.spritesheet("cabrera","assets/img/new/cabrera.png",{
+            frameWidth: 109,
+            frameHeight: 84
+        });
 
         this.load.spritesheet("shots","assets/img/spritesheets/shots.png",{
             frameWidth: 12,
@@ -42,23 +40,9 @@ class Scene1 extends Phaser.Scene {
 
         /****** START OF ANIMATION CREATION ******/
         this.anims.create({
-            key: "ship1_anim",
-            frames: this.anims.generateFrameNumbers("ship1"),
-            frameRate: 20,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: "ship2_anim",
-            frames: this.anims.generateFrameNumbers("ship2"),
-            frameRate: 20,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: "ship3_anim",
-            frames: this.anims.generateFrameNumbers("ship3"),
-            frameRate: 20,
+            key: "enemy_idle",
+            frames: this.anims.generateFrameNumbers("enemy_ship"),
+            frameRate: 10,
             repeat: -1
         });
         
@@ -87,6 +71,13 @@ class Scene1 extends Phaser.Scene {
                 end: 3
             }),
             frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: "idle",
+            frames: this.anims.generateFrameNumbers("cabrera"),
+            frameRate: 10,
             repeat: -1
         });
 

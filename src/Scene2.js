@@ -9,21 +9,25 @@ class Scene2 extends Phaser.Scene {
         // making the background's origin at 0,0 (topleft corner)
         this.background.setOrigin(0,0);
 
-        this.player = this.physics.add.sprite(config.width/2,config.height*3/4,"gi");
+        this.player = this.physics.add.sprite(config.width/2,config.height*3/4,"cabrera");
         this.player.setCollideWorldBounds(true);
 
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);        
 
         // creates 3 sprites (ship) and places them in the coords with the graphics
-        this.ship1 = this.add.sprite(config.width/2 - 50,config.height/2,"ship1");
-        this.ship2 = this.add.sprite(config.width/2,config.height/2,"ship2");
-        this.ship3 = this.add.sprite(config.width/2 + 50,config.height/2,"ship3");
-
+        this.ship1 = this.add.sprite(config.width/2 - 50,config.height/2,"enemy_ship").setScale(0.5);
+        this.ship2 = this.add.sprite(config.width/2,config.height/2,"enemy_ship").setScale(0.5);
+        this.ship3 = this.add.sprite(config.width/2 + 50,config.height/2,"enemy_ship").setScale(0.5);
 
         // creation of groups
         this.powerUps = this.physics.add.group();
         this.projectiles = this.add.group();
+        this.enemies = this.physics.add.group();
+
+        this.enemies.add(this.ship1);
+        this.enemies.add(this.ship2);
+        this.enemies.add(this.ship3);
 
         // adding 10 pups
         var maxObjects = 10;
@@ -48,20 +52,18 @@ class Scene2 extends Phaser.Scene {
             projectile.destroy();
         });
 
-        this.physics.add.ovelap(this.player,this.powerUps,this.pickUpPowerUp,null,this);
+        //NON PHYSICS COLLISION
+        this.physics.add.overlap(this.player,this.powerUps,this.pickUpPowerUp,null,this);
+        this.physics.add.overlap(this.player,this.enemies,this.hurtPlayer,null,this);
+        this.physics.add.overlap(this.projectiles,this.enemies,this.hitEnemy,null,this);
 
         // assign the animation to play on the objects
-        this.ship1.play("ship1_anim");
-        this.ship2.play("ship2_anim");
-        this.ship3.play("ship3_anim");
+        this.ship1.play("enemy_idle");
+        this.ship2.play("enemy_idle");
+        this.ship3.play("enemy_idle");
 
-        // making the objects interactive
-        this.ship1.setInteractive();
-        this.ship2.setInteractive();
-        this.ship3.setInteractive();
-
-        // when clicking an object, call the function of that object
-        this.input.on("gameobjectdown",this.destroyShip,this);
+        // cabrera's idle animation
+        this.player.play("idle");
 
         // show text on screen
         this.add.text(20,20,"Playing game",{
@@ -72,6 +74,17 @@ class Scene2 extends Phaser.Scene {
 
     pickUpPowerUp(player,powerUp){
         powerUp.disableBody(true,true);
+    }
+
+    hurtPlayer(player,enemy){
+        this.resetShip(enemy);
+        player.x = config.width/2;
+        player.y = config.height * 3/4;
+    }
+
+    hitEnemy(projectile,enemy){
+        projectile.destroy();
+        this.resetShip(enemy);
     }
 
     moveShip(ship,speed){
