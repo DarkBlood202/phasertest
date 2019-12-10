@@ -4,6 +4,9 @@ class Scene1 extends Phaser.Scene {
     }
 
     preload(){
+        //LOADING BITMAP FONT
+        this.load.bitmapFont("pixelFont","assets/fonts/font.png","assets/fonts/font.xml");
+
         // LOADING BACKGROUND IMAGE
         this.load.image("background","assets/img/background.png");
 
@@ -32,6 +35,8 @@ class Scene1 extends Phaser.Scene {
             frameHeight: 55
         });
 
+        /**ADDING SOUND **/
+        this.load.audio("snd_explosion",["assets/snd/explosion.ogg","assets/snd/explosion.mp3"]);
     }
 
     create(){
@@ -92,5 +97,6 @@ class Scene1 extends Phaser.Scene {
         });
         
         /****** END OF ANIMATION CREATION ******/
+
     }
 }
