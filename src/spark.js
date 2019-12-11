@@ -3,7 +3,7 @@ class Spark extends Phaser.GameObjects.Sprite{
         super(scene,x,y,texture);
         scene.add.existing(this);
 
-        console.log("Spark created at " + direction + " direction!");
+        // console.log("Spark created at " + direction + " direction!");
 
         let angle = Phaser.Math.DegToRad(-direction);
         this.xSpeed = speed * Math.cos(angle);
@@ -14,9 +14,9 @@ class Spark extends Phaser.GameObjects.Sprite{
         scene.sparks.add(this);
 
         this.scene.time.addEvent({
-            delay: 1000,
+            delay: 750,
             callback: function(){
-                console.log("Spark died at direction " + direction);
+                // console.log("Spark died at direction " + direction);
                 this.destroy();
             },
             callbackScope: this,

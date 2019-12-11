@@ -2,14 +2,14 @@ class Scene2 extends Phaser.Scene {
     constructor(){
         super("playGame");
     }
-
+    
     create(){
         // creating the background as a tilesprite
         this.background = this.add.tileSprite(0,0,config.width,config.height,"background");
         // making the background's origin at 0,0 (topleft corner)
         this.background.setOrigin(0,0);
 
-        this.player = this.physics.add.sprite(config.width/2,config.height*3/4,"cabrera");
+        this.player = this.physics.add.sprite(config.width/2,config.height*3/4,"player_texture");
         this.player.setCollideWorldBounds(true);
 
         this.cursorKeys = this.input.keyboard.createCursorKeys();
@@ -24,16 +24,28 @@ class Scene2 extends Phaser.Scene {
 
         //Spawns enemy each x ms
         this.time.addEvent({
-            delay: 5000,
+            delay: 2500,
             callback: function(){
-                let enemy = new Enemy(
-                    this,
-                    Phaser.Math.Between(0,config.width),
-                    0,
-                    "small_enemy",
-                    "smallEnemy_idle"
-                );
-                this.enemies.add(enemy);
+                if(Math.random() > 0.5){
+                    let enemy = new Enemy(
+                        this,
+                        Phaser.Math.Between(0,config.width),
+                        0,
+                        "big_enemy",
+                        "bigEnemy_idle"
+                    );
+                    this.enemies.add(enemy);
+                }
+                else{
+                    let enemy = new Enemy(
+                        this,
+                        Phaser.Math.Between(0,config.width),
+                        0,
+                        "small_enemy",
+                        "smallEnemy_idle"
+                    );
+                    this.enemies.add(enemy);
+                }
             },
             callbackScope: this,
             loop: true
@@ -45,8 +57,8 @@ class Scene2 extends Phaser.Scene {
         this.physics.add.overlap(this.projectiles,this.enemies,this.hitEnemy,null,this);
         this.physics.add.overlap(this.player,this.bullets,this.hurtPlayer,null,this);
 
-        // cabrera's idle animation
-        this.player.play("idle");
+        // players's idle animation
+        this.player.play("player_idle");
 
         //storing score value
         this.score = 0;
@@ -65,17 +77,31 @@ class Scene2 extends Phaser.Scene {
 
         // creates the sound that will be used
         this.sndExplosion = this.sound.add("snd_explosion");
+        this.sndPickUp = this.sound.add("snd_pickup");
+        this.bgmGame = this.sound.add("bgm_game");
+
+        var musicConfig = {
+            mute: false,
+            volume: 1,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: true,
+            delay: 0
+        };
+        this.bgmGame.play(musicConfig)
 
     }
 
     createExplosion(x,y){
         for(var i = 0; i < 360; i += 36){
-            let spark = new Spark(this,x,y,i,1.5,"spark");
+            let spark = new Spark(this,x,y,i,1,"spark");
         }
     }
 
     pickUpPowerUp(player,powerUp){
         // console.log("Collision: Player and PowerUp!")
+        this.sndPickUp.play();
         powerUp.disableBody(true,true);
         if(this.power < 128){
             this.power += 1;
@@ -121,9 +147,6 @@ class Scene2 extends Phaser.Scene {
 
     resetShip(ship){
         ship.onDestroy();
-        // ship.y = 0;
-        // var randomX = Phaser.Math.Between(0,config.width);
-        // ship.x = randomX;
 
         for (var i = 0; i < 5; i++){
             var powerUp = this.physics.add.sprite(16,16,"items");
@@ -137,7 +160,7 @@ class Scene2 extends Phaser.Scene {
                 powerUp.play("points");
             }
 
-            powerUp.setVelocity(0,3);
+            powerUp.setVelocity(0,5);
             powerUp.setCollideWorldBounds(true);
             powerUp.setBounce(1);
         }
@@ -165,7 +188,7 @@ class Scene2 extends Phaser.Scene {
     update(){
 
         for(var i = 0; i < this.enemies.getChildren().length; i++){
-            this.moveShip(this.enemies.getChildren()[i],0.5);
+            this.moveShip(this.enemies.getChildren()[i],Phaser.Math.Between(0.5,2.5));
         }
 
         for(var i = 0; i < this.sparks.getChildren().length; i++){
