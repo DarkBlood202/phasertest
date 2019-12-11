@@ -8,31 +8,43 @@ class Scene1 extends Phaser.Scene {
         this.load.bitmapFont("pixelFont","assets/fonts/font.png","assets/fonts/font.xml");
 
         // LOADING BACKGROUND IMAGE
-        this.load.image("background","assets/img/background.png");
+        this.load.image("background","assets/img/new/background.png");
+
+        // Load shot
+        this.load.image("shot","assets/img/new/shot.png");
+
+        // Load spark
+        this.load.image("spark","assets/img/new/spark.png");
 
         /****** LOADING SPRITESHEETS ******/
-        this.load.spritesheet("enemy_ship","assets/img/new/enemy_ship.png",{
-            frameWidth: 128,
-            frameHeight: 125
+        this.load.spritesheet("big_enemy","assets/img/new/bigEnemy.png",{
+            frameWidth: 48,
+            frameHeight: 48
         });
 
-        this.load.spritesheet("explosion","assets/img/spritesheets/explosion.png",{
+        this.load.spritesheet("small_enemy","assets/img/new/smallEnemy.png",{
             frameWidth: 16,
             frameHeight: 16
         });
-        this.load.spritesheet("powerup","assets/img/spritesheets/power-up.png",{
-            frameWidth: 16,
+
+        this.load.spritesheet("small_bullets","assets/img/new/smallBullets.png",{
+            frameWidth: 15,
+            frameHeight: 15
+        });
+
+        this.load.spritesheet("big_bullets","assets/img/new/bigBullets.png",{
+            frameWidth: 31,
+            frameHeight: 31
+        });
+
+        this.load.spritesheet("items","assets/img/new/items.png",{
+            frameWidth: 8,
             frameHeight: 16
         });
 
         this.load.spritesheet("cabrera","assets/img/new/cabrera.png",{
             frameWidth: 109,
             frameHeight: 84
-        });
-
-        this.load.spritesheet("shots","assets/img/spritesheets/shots.png",{
-            frameWidth: 12,
-            frameHeight: 55
         });
 
         /**ADDING SOUND **/
@@ -43,56 +55,85 @@ class Scene1 extends Phaser.Scene {
         this.add.text(20,20,"Loading game...");
         this.scene.start("playGame");
 
-        /****** START OF ANIMATION CREATION ******/
+        /****** START OF ANIMATION/FRAMES CREATION ******/
         this.anims.create({
-            key: "enemy_idle",
-            frames: this.anims.generateFrameNumbers("enemy_ship"),
+            key: "bigEnemy_idle",
+            frames: this.anims.generateFrameNumbers("big_enemy"),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: "smallEnemy_idle",
+            frames: this.anims.generateFrameNumbers("small_enemy"),
             frameRate: 10,
             repeat: -1
         });
         
         this.anims.create({
-            key: "explode",
-            frames: this.anims.generateFrameNumbers("explosion"),
-            frameRate: 20,
-            repeat: 0,
-            hideOnComplete: true
-        });
-
-        this.anims.create({
-            key: "red",
-            frames: this.anims.generateFrameNumbers("powerup", {
+            key: "TargetBullet_sW",
+            frames: this.anims.generateFrameNumbers("small_bullets",{
                 start: 0,
+                end: 0
+            }),
+            frameRate: 0,
+            repeat: 0
+        });
+        
+        this.anims.create({
+            key: "Bullet_sW",
+            frames: this.anims.generateFrameNumbers("small_bullets",{
+                start: 1,
                 end: 1
             }),
-            frameRate: 5,
-            repeat: -1
+            frameRate: 0,
+            repeat: 0
         });
 
         this.anims.create({
-            key: "gray",
-            frames: this.anims.generateFrameNumbers("powerup", {
+            key: "TargetBullet_sB",
+            frames: this.anims.generateFrameNumbers("small_bullets",{
                 start: 2,
+                end: 2
+            }),
+            frameRate: 0,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "Bullet_sB",
+            frames: this.anims.generateFrameNumbers("small_bullets",{
+                start: 3,
                 end: 3
             }),
-            frameRate: 5,
-            repeat: -1
+            frameRate: 0,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "powerup",
+            frames: this.anims.generateFrameNumbers("items", {
+                start: 0,
+                end: 0
+            }),
+            frameRate: 0,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "points",
+            frames: this.anims.generateFrameNumbers("items", {
+                start: 1,
+                end: 1
+            }),
+            frameRate: 0,
+            repeat: 0
         });
 
         this.anims.create({
             key: "idle",
             frames: this.anims.generateFrameNumbers("cabrera"),
             frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: "shot",
-            frames: this.anims.generateFrameNumbers("shots", {
-                start: 0,
-                end: 0
-            }),
-            frameRate:20,
             repeat: -1
         });
         
